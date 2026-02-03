@@ -75,8 +75,8 @@ export default function Header() {
       </div>
 
       {/* MOBILE MENU OVERLAY */}
-      <div className={`fixed inset-0 top-[72px] lg:hidden bg-[#070C1C] transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <nav className="flex flex-col items-center gap-8 pt-12">
+      <div className={`fixed inset-0 top-[72px]  lg:hidden bg-[#070C1C] transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <nav className="flex min-h-screen bg-[#070C1C] flex-col items-center gap-8 pt-12">
           {navLinks.map((link) => (
             <Link 
               key={link.name}
