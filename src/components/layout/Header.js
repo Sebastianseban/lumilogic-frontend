@@ -1,102 +1,143 @@
 
 
-"use client"
+"use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Menu, X } from "lucide-react";
+import api from "@/lib/api";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [menu, setMenu] = useState([]);
 
-  const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "AWS & LL", href: "/aws" },
-    { name: "Services", href: "/services" },
-    { name: "About Us", href: "/about" },
-  ];
+  const [openCategoryId, setOpenCategoryId] = useState(null);
+  const [activeChild, setActiveChild] = useState(null);
+
+  /* ---------------- FETCH MENU ---------------- */
+  useEffect(() => {
+    api.get("/menu").then((res) => setMenu(res.data.data));
+  }, []);
+
+  /* Reset child when category changes */
+  useEffect(() => {
+    if (openCategoryId) {
+      const category = menu.find((c) => c._id === openCategoryId);
+      setActiveChild(category?.children?.[0] ?? null);
+    }
+  }, [openCategoryId, menu]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[100] bg-[#070C1C]/80 backdrop-blur-md border-b border-white/5">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10 lg:py-5">
-        
-        {/* LOGO AREA */}
-        <Link href="/" className="flex items-center gap-2 lg:gap-4 group shrink-0">
-          <div className="relative w-[40px] h-[42px] lg:w-[67px] lg:h-[72px]">
-            <Image
-              src="/images/logo.svg"
-              alt="LumiLogic Logo"
-              fill
-              priority
-              className="object-contain"
-            />
-          </div>
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
 
-          <div className="flex flex-col">
-            <h1 className="font-['Inter'] font-bold text-[24px] lg:text-[47.64px] leading-none text-white">
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-3">
+          <div className="relative w-[40px] h-[42px] lg:w-[67px] lg:h-[72px]">
+            <Image src="/images/logo.svg" alt="LumiLogic" fill />
+          </div>
+          <div>
+            <h1 className="text-white font-bold text-[24px] lg:text-[48px] leading-none">
               LumiLogic
             </h1>
-            <span className="text-[8px] lg:text-[12px] tracking-[0.1em] text-[#9C9E9D] font-medium">
+            <span className="text-[10px] tracking-widest text-gray-400">
               AI & Cloud Consulting
             </span>
           </div>
         </Link>
 
-        {/* DESKTOP NAVIGATION */}
-        <nav className="hidden items-center gap-6 xl:gap-8 lg:flex">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.name}
-              href={link.href} 
-              className="text-[14px] font-bold tracking-widest text-white hover:text-[#CE80DD] transition-colors uppercase"
+        {/* DESKTOP NAV */}
+        <nav className="hidden lg:flex items-center gap-8">
+
+          <Link href="/" className="nav-link">HOME</Link>
+
+          {menu.map((category) => (
+            <div
+              key={category._id}
+              className="relative"
+              onMouseEnter={() => setOpenCategoryId(category._id)}
+              onMouseLeave={() => setOpenCategoryId(null)}
             >
-              {link.name}
-            </Link>
+              <span className="nav-link cursor-pointer">
+                {category.title.toUpperCase()}
+              </span>
+
+              {openCategoryId === category._id && category.children?.length > 0 && (
+                <div className="absolute left-0 top-full mt-4 z-50 pointer-events-auto">
+
+                  <div className="flex rounded-md overflow-hidden bg-[#1B1E27] border border-white/5 shadow-2xl">
+
+                    {/* LEFT COLUMN */}
+                    <div className="min-w-[280px] py-2">
+                      {category.children.map((child) => {
+                        const isActive = activeChild?._id === child._id;
+
+                        return (
+                          <div
+                            key={child._id}
+                            onMouseEnter={() => setActiveChild(child)}
+                            className={`flex items-center justify-between px-4 py-2 cursor-pointer transition
+                              ${isActive
+                                ? "bg-[#232632] text-[#4EA1FF]"
+                                : "hover:bg-[#232632] text-gray-200"}
+                            `}
+                          >
+                            <span className="text-sm">{child.title}</span>
+                            <span className="text-lg opacity-70">›</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* RIGHT COLUMN */}
+                    <div className="min-w-[320px] bg-[#20232E] py-2">
+                      {activeChild?.pages?.map((page) => (
+                        <Link
+                          key={page.slug}
+                          href={`/${page.slug}`}
+                          className="block px-4 py-2 text-sm text-gray-300 hover:bg-[#2A2E3D] hover:text-white transition"
+                        >
+                          {page.title}
+                        </Link>
+                      ))}
+                    </div>
+
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
-          
+
+          <Link href="/about" className="nav-link">ABOUT US</Link>
+
           <Link
             href="/enquiry"
-            className="flex h-[41px] items-center gap-2 rounded-[16px] bg-[#CE80DD] px-6 text-[14px] font-medium text-white transition-all hover:opacity-90 active:scale-95 shadow-lg shadow-purple-500/20"
+            className="flex items-center gap-2 rounded-[16px] bg-[#CE80DD] px-6 py-2 text-sm font-medium text-white shadow-lg"
           >
             <Mail size={16} />
             ENQUIRY
           </Link>
         </nav>
 
-        {/* MOBILE HAMBURGER BUTTON */}
-        <button 
-          className="lg:hidden text-white p-2"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle Menu"
-        >
+        {/* MOBILE TOGGLE */}
+        <button className="lg:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
-      {/* MOBILE MENU OVERLAY */}
-      <div className={`fixed inset-0 top-[72px]  lg:hidden bg-[#070C1C] transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <nav className="flex min-h-screen bg-[#070C1C] flex-col items-center gap-8 pt-12">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.name}
-              href={link.href} 
-              onClick={() => setIsOpen(false)}
-              className="text-[18px] font-bold tracking-widest text-white uppercase"
-            >
-              {link.name}
-            </Link>
-          ))}
-          <Link
-            href="/enquiry"
-            onClick={() => setIsOpen(false)}
-            className="mt-4 flex h-[50px] w-[200px] items-center justify-center gap-2 rounded-[16px] bg-[#CE80DD] text-[16px] font-medium text-white"
-          >
-            <Mail size={18} />
-            ENQUIRY
-          </Link>
-        </nav>
-      </div>
+      {/* NAV LINK STYLE */}
+      <style jsx>{`
+        .nav-link {
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.15em;
+          color: white;
+        }
+        .nav-link:hover {
+          color: #ce80dd;
+        }
+      `}</style>
     </header>
   );
 }
