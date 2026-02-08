@@ -1,20 +1,41 @@
-// components/blocks/ProcessGridBlock.jsx
+
 export default function ProcessGridBlock({ data }) {
   return (
-    <section className="py-20 px-6 lg:px-16 text-white">
-      <h2 className="text-3xl font-bold mb-4">{data.heading}</h2>
-      <p className="mb-10 text-gray-400">{data.description}</p>
+    <section className="py-20 px-6 bg-[#020617]"> {/* section-padding */}
+      <div className="container mx-auto">
+        {/* Centered Header */}
+        <h2 className="text-3xl md:text-[2.5rem] font-bold mb-4 text-center text-white leading-tight">
+          {data.heading}
+        </h2>
+        <p className="text-center text-[#94a3b8] max-w-2xl mx-auto mb-12 text-lg">
+          {data.description}
+        </p>
 
-      <div className="grid md:grid-cols-3 gap-8">
-        {data.steps.map(step => (
-          <div key={step.number} className="bg-[#1B1E27] p-6 rounded-xl">
-            <div className="text-[#CE80DD] text-xl font-bold mb-2">
-              {step.number}
+        {/* The process-grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
+          {data.steps.map((step, index) => (
+            <div
+              key={index}
+              className="group relative bg-[rgba(30,41,59,0.5)] p-[30px] rounded-[12px] border border-[rgba(148,163,184,0.1)] transition-all duration-300 hover:-translate-y-[5px] hover:border-[#CE80DD]"
+            >
+              {/* .process-number */}
+              <div className="text-[2rem] font-bold text-[#CE80DD] opacity-50 mb-[15px]">
+                {/* Dynamically ensures 01, 02 format if not provided in data */}
+                {step.number || (index + 1).toString().padStart(2, '0')}
+              </div>
+
+              {/* Title & Description */}
+              <h3 className="text-xl font-bold mb-3 text-white">
+                {step.title}
+              </h3>
+              <p className="text-[#94a3b8] text-[0.95rem] leading-relaxed">
+                {step.description}
+              </p>
+
+              
             </div>
-            <h3 className="font-semibold mb-2">{step.title}</h3>
-            <p className="text-gray-400 text-sm">{step.description}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

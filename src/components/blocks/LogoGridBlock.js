@@ -1,25 +1,51 @@
-// components/blocks/LogoGridBlock.jsx
+
 export default function LogoGridBlock({ data }) {
   return (
-    <section className="py-24 px-6 lg:px-16 bg-[#0B1020] text-white">
-      <h2 className="text-3xl font-bold mb-12">
-        {data.heading}
-      </h2>
+    <section className="py-20 bg-[#0f172a]"> {/* bg-darker */}
+      <div className="container mx-auto px-6">
+        {/* Section Title */}
+        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-white">
+          {data.heading}
+        </h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-12 items-center">
-        {data.logos.map((logo) => (
-          <div key={logo.name} className="text-center">
-            <img
-              src={logo.image}
-              alt={logo.name}
-              className="mx-auto h-16 object-contain"
-            />
-            <p className="mt-2 text-sm text-gray-400">
-              {logo.description}
-            </p>
-          </div>
-        ))}
+        {/* .tech-grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {data.logos.map((logo, index) => (
+            <div
+              key={index}
+              className="bg-[rgba(15,23,42,0.6)] p-[25px] rounded-[10px] border-t-3 border-[#60a5fa] text-center transition-all duration-300 hover:bg-[rgba(15,23,42,0.8)]"
+            >
+              {/* Image/Logo area */}
+              {logo.image && (
+                <div className="mb-4 flex justify-center">
+                  <img
+                    src={logo.image}
+                    alt={logo.name}
+                    className="h-12 object-contain filter brightness-110"
+                  />
+                </div>
+              )}
+
+              {/* h4 in your HTML */}
+              <h4 className="text-lg font-semibold mb-[10px] text-[#e2e8f0]">
+                {logo.name}
+              </h4>
+
+              {/* p in your HTML */}
+              <p className="text-[#94a3b8] text-[0.9rem] leading-relaxed">
+                {logo.description}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
+
+      {/* Tailwind doesn't have border-t-3 by default, adding via style or arbitrary class */}
+      <style jsx>{`
+        .border-t-3 {
+          border-top-width: 3px;
+        }
+      `}</style>
     </section>
   );
 }
