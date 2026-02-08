@@ -1,0 +1,23 @@
+// components/blocks/ServicesGridBlock.jsx
+export default function ServicesGridBlock({ data }) {
+  return (
+    <section className="py-24 px-6 lg:px-16 text-white">
+      <h2 className="text-3xl font-bold mb-12">
+        {data.heading}
+      </h2>
+
+      <div className="grid md:grid-cols-3 gap-8">
+        {data.services.map((service, i) => (
+          <div
+            key={i}
+            className="bg-[#1B1E27] p-6 rounded-xl"
+          >
+            <h3 className="font-semibold mb-2">
+              {service.title}
+            </h3>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}

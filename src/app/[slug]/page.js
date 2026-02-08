@@ -1,34 +1,53 @@
-import { notFound } from "next/navigation";
-import BlockRenderer from "@/components/BlockRenderer";
+"use client";
 
-export async function generateMetadata({ params }) {
-  const res = await fetch(
-    `http://localhost:4000/api/v1/pages/${params.slug}`,
-    { cache: "no-store" }
-  );
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import api from "@/lib/api";
+import BlockRenderer from "@/components/blocks/BlockRenderer";
 
-  if (!res.ok) return {};
-  const { data: page } = await res.json();
+export default function Page() {
+  const params = useParams();
+  const slug = params?.slug;
+  
+  const [page, setPage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  return {
-    title: page.seo?.title || page.title,
-    description: page.seo?.description,
-  };
-}
+  useEffect(() => {
+    if (!slug) return;
 
-export default async function Page({ params }) {
-  const res = await fetch(
-    `http://localhost:4000/api/v1/pages/${params.slug}`,
-    { cache: "no-store" }
-  );
+    setLoading(true);
+    api.get(`/pages/${slug}`)
+      .then(res => {
+        setPage(res.data.data);
+        setError(null);
+      })
+      .catch(err => {
+        console.error("Failed to fetch page data:", err);
+        setError("Failed to load page content from server.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [slug]);
 
-  if (!res.ok) notFound();
+  if (loading) {
+    return <div className="pt-32 text-center text-white">Loading...</div>;
+  }
 
-  const { data: page } = await res.json();
+  if (error) {
+    return <div className="pt-32 text-center text-red-500">{error}</div>;
+  }
+
+  if (!page) {
+    return <div className="pt-32 text-center text-white">Page not found</div>;
+  }
 
   return (
-    <main className="bg-[#020617]">
-      <BlockRenderer blocks={page.blocks} />
+    <main className="pt-32">
+      {page.blocks && page.blocks.map((block, i) => (
+        <BlockRenderer key={i} block={block} />
+      ))}
     </main>
   );
 }
