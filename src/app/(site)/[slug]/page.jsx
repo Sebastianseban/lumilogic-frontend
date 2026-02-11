@@ -23,8 +23,7 @@ export default function Page() {
         setError(null);
       })
       .catch(err => {
-        console.error("Failed to fetch page data:", err);
-        setError("Failed to load page content from server.");
+        setError("Failed to load page content.");
       })
       .finally(() => {
         setLoading(false);
