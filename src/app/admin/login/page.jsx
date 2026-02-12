@@ -29,7 +29,7 @@ export default function LoginPage() {
 
       localStorage.setItem('accessToken', token);
       localStorage.setItem('admin_token', token);
-      router.push('/admin');
+      router.push('/admin/categories');
     } catch (err) {
       setError(err?.response?.data?.message || 'Invalid email or password');
     } finally {

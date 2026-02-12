@@ -15,7 +15,7 @@ export default function BenefitsGridBlock({ data }) {
 
         {/* The process-grid layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data.benefits.map((benefit, index) => (
+          {data.benefits?.map((benefit, index) => (
             <div
               key={index}
               className="process-card group relative bg-[rgba(30,41,59,0.5)] p-8 rounded-[12px] border border-[rgba(148,163,184,0.1)] transition-all duration-300 hover:-translate-y-[5px] hover:border-[#CE80DD]"

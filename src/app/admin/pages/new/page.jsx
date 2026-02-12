@@ -5,21 +5,29 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 import { usePageEditorStore } from '@/store/usePageEditorStore';
+import { useCategoryStore } from '@/store/useCategoryStore';
 import PageMetaForm from '@/components/admin/pages/PageMetaForm';
 import BlockBuilder from '@/components/admin/pages/BlockBuilder';
 
 export default function NewPage() {
   const router = useRouter();
   const { createPage, isSaving } = usePageEditorStore();
+  const { categories, fetchCategories } = useCategoryStore();
   
   const [meta, setMeta] = useState({
     title: '',
     slug: '',
     description: '',
+    type: 'service',
     isPublished: false
   });
   const [blocks, setBlocks] = useState([]);
   const [error, setError] = useState('');
+
+  // Fetch categories on mount
+  useState(() => {
+    fetchCategories();
+  }, []);
 
   const handleSave = async () => {
     if (!meta.title || !meta.slug) {
@@ -32,7 +40,8 @@ export default function NewPage() {
       const newPage = await createPage({ ...meta, blocks });
       router.push(`/admin/pages/${newPage._id}`);
     } catch (err) {
-      setError('Failed to create page. Please try again.');
+      console.error('Create page error:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to create page. Please try again.');
     }
   };
 
@@ -71,7 +80,11 @@ export default function NewPage() {
 
       {/* Page Metadata */}
       <div className="mb-6">
-        <PageMetaForm meta={meta} onChange={setMeta} />
+        <PageMetaForm 
+          meta={meta} 
+          onChange={setMeta} 
+          categories={categories} 
+        />
       </div>
 
       {/* Content Blocks */}

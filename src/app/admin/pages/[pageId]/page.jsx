@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { usePageEditorStore } from '@/store/usePageEditorStore';
+import { useCategoryStore } from '@/store/useCategoryStore';
 import PageMetaForm from '@/components/admin/pages/PageMetaForm';
 import BlockBuilder from '@/components/admin/pages/BlockBuilder';
 
@@ -12,11 +13,17 @@ export default function EditPage() {
   const params = useParams();
   const router = useRouter();
   const { page, fetchPage, updatePage, isSaving } = usePageEditorStore();
+  const { categories, fetchCategories } = useCategoryStore();
   
   const [meta, setMeta] = useState(null);
   const [blocks, setBlocks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Fetch categories on mount
+  useState(() => {
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     if (params.pageId) {
@@ -36,6 +43,8 @@ export default function EditPage() {
         title: page.title || '',
         slug: page.slug || '',
         description: page.description || '',
+        type: page.type || 'service',
+        categoryId: page.categoryId || '',
         isPublished: page.isPublished || false
       });
       setBlocks(page.blocks || []);
@@ -141,7 +150,11 @@ export default function EditPage() {
 
       {/* Page Metadata */}
       <div className="mb-6">
-        <PageMetaForm meta={meta} onChange={setMeta} />
+        <PageMetaForm 
+          meta={meta} 
+          onChange={setMeta} 
+          categories={categories} 
+        />
       </div>
 
       {/* Content Blocks */}
