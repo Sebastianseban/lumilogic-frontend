@@ -5,11 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function HeroSection({ data }) {
-  // Use data if provided, otherwise fall back to default Home content
+  
   const heading = data?.heading;
   const description = data?.description;
 
-  // Default content for Home page
+  
   const isHome = !data;
 
   return (
@@ -17,7 +17,7 @@ export default function HeroSection({ data }) {
       {/* --- HERO CONTENT --- */}
       <div className="relative mx-auto flex max-w-7xl flex-col justify-center px-6 pt-24 md:px-10 md:pt-32 lg:pt-48">
         
-        {/* Adjusted mt-65 (which is roughly 260px) to be smaller on mobile to avoid massive empty space */}
+     
         <div className="relative z-20 max-w-2xl mt-20 md:mt-40 lg:mt-64">
           {isHome ? (
             <>
@@ -48,7 +48,7 @@ export default function HeroSection({ data }) {
             </>
           )}
 
-          {/* Rounded Outline Button - Show on Home only for now, or if we had a CTA in data */}
+         
           {isHome && (
             <Link
               href="/services"

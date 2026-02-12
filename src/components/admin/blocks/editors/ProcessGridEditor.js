@@ -32,7 +32,7 @@ export default function ProcessGridEditor({ data, onChange }) {
                     type="text" 
                     value={data.heading || ''} 
                     onChange={(e) => handleChange('heading', e.target.value)}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" 
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" 
                     placeholder="Our Process"
                 />
             </div>
@@ -42,7 +42,7 @@ export default function ProcessGridEditor({ data, onChange }) {
                     rows={2}
                     value={data.description || ''} 
                     onChange={(e) => handleChange('description', e.target.value)}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" 
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" 
                     placeholder="How we work..."
                 />
             </div>
@@ -74,7 +74,7 @@ export default function ProcessGridEditor({ data, onChange }) {
                                     type="text" 
                                     value={step.title} 
                                     onChange={(e) => handleUpdateStep(index, 'title', e.target.value)}
-                                    className="block w-full border-gray-300 rounded bg-white shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm px-2 py-1 border font-medium" 
+                                    className="block w-full border-gray-300 rounded bg-white shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 text-sm px-2 py-1 border font-medium" 
                                     placeholder="Step Title"
                                 />
                             </div>
@@ -83,7 +83,7 @@ export default function ProcessGridEditor({ data, onChange }) {
                                     rows={2}
                                     value={step.description} 
                                     onChange={(e) => handleUpdateStep(index, 'description', e.target.value)}
-                                    className="block w-full border-gray-300 rounded bg-white shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm px-2 py-1 border" 
+                                    className="block w-full border-gray-300 rounded bg-white shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 text-sm px-2 py-1 border" 
                                     placeholder="Description of this step..."
                                 />
                             </div>

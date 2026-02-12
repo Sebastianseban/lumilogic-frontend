@@ -32,7 +32,7 @@ export default function BenefitsGridEditor({ data, onChange }) {
                     type="text" 
                     value={data.heading || ''} 
                     onChange={(e) => handleChange('heading', e.target.value)}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" 
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" 
                     placeholder="Why Choose Us"
                 />
             </div>
@@ -42,7 +42,7 @@ export default function BenefitsGridEditor({ data, onChange }) {
                     rows={2}
                     value={data.description || ''} 
                     onChange={(e) => handleChange('description', e.target.value)}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" 
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" 
                     placeholder="Key benefits..."
                 />
             </div>
@@ -74,7 +74,7 @@ export default function BenefitsGridEditor({ data, onChange }) {
                                     type="text" 
                                     value={benefit.title} 
                                     onChange={(e) => handleUpdateBenefit(index, 'title', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded bg-white shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm px-2 py-1 border" 
+                                    className="mt-1 block w-full border-gray-300 rounded bg-white shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 text-sm px-2 py-1 border" 
                                 />
                             </div>
                              <div>
@@ -82,7 +82,7 @@ export default function BenefitsGridEditor({ data, onChange }) {
                                 <select 
                                      value={benefit.icon} 
                                      onChange={(e) => handleUpdateBenefit(index, 'icon', e.target.value)}
-                                     className="mt-1 block w-full border-gray-300 rounded bg-white shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm px-2 py-1 border" 
+                                     className="mt-1 block w-full border-gray-300 rounded bg-white shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 text-sm px-2 py-1 border" 
                                 >
                                     <option value="CheckCircle">CheckCircle</option>
                                     <option value="Star">Star</option>
@@ -96,7 +96,7 @@ export default function BenefitsGridEditor({ data, onChange }) {
                                     rows={2}
                                     value={benefit.description} 
                                     onChange={(e) => handleUpdateBenefit(index, 'description', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded bg-white shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm px-2 py-1 border" 
+                                    className="mt-1 block w-full border-gray-300 rounded bg-white shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 text-sm px-2 py-1 border" 
                                 />
                             </div>
                         </div>

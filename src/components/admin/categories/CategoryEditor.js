@@ -87,7 +87,7 @@ export default function CategoryEditor({ category, onSave, onCancel, onDelete, c
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border"
                     placeholder="e.g. Cloud Services"
                     required
                 />
@@ -105,7 +105,7 @@ export default function CategoryEditor({ category, onSave, onCancel, onDelete, c
                         name="slug"
                         value={formData.slug}
                         onChange={handleChange}
-                        className="flex-1 block w-full rounded-none rounded-r-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border"
+                        className="flex-1 block w-full rounded-none rounded-r-md border-gray-300 text-black focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border"
                         placeholder="cloud-services"
                     />
                 </div>
@@ -118,7 +118,7 @@ export default function CategoryEditor({ category, onSave, onCancel, onDelete, c
                     name="parentId"
                     value={formData.parentId}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border"
                 >
                     <option value="">(None - Top Level)</option>
                     {parentOptions.map(opt => (
@@ -135,7 +135,7 @@ export default function CategoryEditor({ category, onSave, onCancel, onDelete, c
                     name="order"
                     value={formData.order}
                     onChange={handleChange}
-                    className="mt-1 block w-24 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border"
+                    className="mt-1 block w-24 rounded-md border-gray-300 shadow-sm text-black focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border"
                 />
             </div>
 

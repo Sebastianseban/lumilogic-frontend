@@ -57,7 +57,7 @@ export default function PageMetaForm({ meta = {}, onChange, categories = [] }) {
           value={meta.slug || ''}
           onChange={(e) => handleChange('slug', e.target.value)}
           placeholder="page-url-slug"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <p className="mt-1 text-xs text-gray-500">
           URL: /{meta.slug || 'page-url-slug'}
@@ -72,7 +72,7 @@ export default function PageMetaForm({ meta = {}, onChange, categories = [] }) {
         <select
           value={meta.type || 'service'}
           onChange={(e) => handleChange('type', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="service">Service Page</option>
           <option value="home">Home Page</option>
@@ -91,7 +91,7 @@ export default function PageMetaForm({ meta = {}, onChange, categories = [] }) {
           <select
             value={meta.categoryId || ''}
             onChange={(e) => handleChange('categoryId', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select Category</option>
             {flattenCategories(categories).map((cat) => (
@@ -113,7 +113,7 @@ export default function PageMetaForm({ meta = {}, onChange, categories = [] }) {
           value={meta?.seo?.title || ''}
           onChange={(e) => handleSeoChange('title', e.target.value)}
           placeholder="SEO optimized title"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -127,7 +127,7 @@ export default function PageMetaForm({ meta = {}, onChange, categories = [] }) {
           value={meta?.seo?.description || ''}
           onChange={(e) => handleSeoChange('description', e.target.value)}
           placeholder="Brief description for SEO"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
