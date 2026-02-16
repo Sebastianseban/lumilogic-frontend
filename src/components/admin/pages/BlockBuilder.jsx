@@ -78,7 +78,7 @@ export default function BlockBuilder({ blocks = [], onChange }) {
             
             return (
                 <BlockWrapper
-                    key={block.id}
+                    key={block._id || block.id || index}
                     block={block}
                     index={index}
                     totalBlocks={blocks.length}

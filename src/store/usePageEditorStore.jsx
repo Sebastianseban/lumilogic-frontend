@@ -7,9 +7,16 @@ export const usePageEditorStore = create((set) => ({
 
   fetchPage: async (id) => {
     try {
+      console.log('Fetching page with ID:', id);
       const res = await api.get(`/admin/pages/${id}`);
+      console.log('Page fetched successfully:', res.data);
       set({ page: res.data.data });
     } catch (error) {
+      console.error('Error fetching page:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
       set({ page: null });
       throw error;
     }
@@ -32,8 +39,8 @@ export const usePageEditorStore = create((set) => ({
     categoryId: formData.categoryId || null,
     blocks: formData.blocks || [],
     seo: {
-      title: formData.seoTitle || formData.title,
-      description: formData.description || '',
+      title: formData.seo?.title || formData.seoTitle || formData.title,
+      description: formData.seo?.description || formData.description || '',
     },
     isPublished: formData.isPublished || false,
   };
@@ -62,8 +69,8 @@ export const usePageEditorStore = create((set) => ({
     categoryId: formData.categoryId || null,
     blocks: formData.blocks || [],
     seo: {
-      title: formData.seoTitle || formData.title,
-      description: formData.description || '',
+      title: formData.seo?.title || formData.seoTitle || formData.title,
+      description: formData.seo?.description || formData.description || '',
     },
     isPublished: formData.isPublished || false,
   };

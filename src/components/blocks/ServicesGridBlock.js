@@ -22,33 +22,59 @@
 //   );
 // }
 
+import { Box, Cloud, Database, Shield, BarChart3 } from "lucide-react";
+
+const ICON_MAP = {
+  Box,
+  Cloud,
+  Database,
+  Shield,
+  BarChart: BarChart3,
+};
+
 export default function ServicesGridBlock({ data }) {
+  const services = data?.services || [];
+
   return (
     <section className="py-20 bg-[#0f172a]"> {/* Matches bg-darker */}
       <div className="container mx-auto px-6">
         {/* Centered Heading */}
         <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center text-white">
-          {data.heading}
+          {data?.heading}
         </h2>
+        {data?.description && (
+          <p className="text-center text-[#94a3b8] max-w-3xl mx-auto mb-10 text-lg">
+            {data.description}
+          </p>
+        )}
 
         {/* .list-grid-2 implementation */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl mx-auto">
-          {data.services.map((service, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-[15px] bg-[#1e293b] p-5 rounded-lg border border-transparent transition-all duration-300 hover:border-[#60a5fa]/30 group"
-            >
-              {/* Icon - .check-list-item i */}
-              <div className="text-[#60a5fa] text-[1.2rem] flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
-                <i className={`fa-solid ${service.icon || 'fa-arrow-right-arrow-left'}`}></i>
+          {services.map((service, i) => {
+            const Icon = ICON_MAP[service?.icon] || Box;
+            return (
+              <div
+                key={service?.id || i}
+                className="flex items-start gap-[15px] bg-[#1e293b] p-5 rounded-lg border border-transparent transition-all duration-300 hover:border-[#60a5fa]/30 group"
+              >
+              <div className="text-[#60a5fa] flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
+                <Icon size={22} />
               </div>
 
               {/* Text - .check-list-item span */}
-              <span className="text-[#e2e8f0] font-medium text-lg">
-                {service.title}
-              </span>
+              <div>
+                <h3 className="text-[#e2e8f0] font-medium text-lg">
+                  {service?.title}
+                </h3>
+                {service?.description && (
+                  <p className="text-[#94a3b8] text-sm mt-1 leading-relaxed">
+                    {service.description}
+                  </p>
+                )}
+              </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

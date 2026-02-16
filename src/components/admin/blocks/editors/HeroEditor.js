@@ -1,5 +1,5 @@
 import React from 'react';
-import { Upload } from 'lucide-react';
+import ImageUploader from '@/components/admin/common/ImageUploader';
 
 export default function HeroEditor({ data, onChange }) {
   const handleChange = (field, value) => {
@@ -64,26 +64,13 @@ export default function HeroEditor({ data, onChange }) {
       </div>
 
       <div className="space-y-4">
-         <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Background Image</label>
-            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
-              <div className="space-y-1 text-center">
-                <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                <div className="flex text-sm text-gray-600">
-                  <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
-                    <span>Upload a file</span>
-                    <input type="file" className="sr-only" />
-                  </label>
-                  <p className="pl-1">or drag and drop</p>
-                </div>
-                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-              </div>
-            </div>
-             {/* Preview placeholder */}
-             <div className="mt-2 h-40 bg-gray-100 rounded-md flex items-center justify-center text-gray-400 text-sm">
-                 Image Preview Area
-             </div>
-        </div>
+        <ImageUploader
+          label="Background Image"
+          value={data.backgroundImage || ''}
+          onChange={(url) => handleChange('backgroundImage', url)}
+          aspectRatio="16/9"
+          maxSizeMB={10}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Upload, AlignLeft, AlignRight } from 'lucide-react';
+import { AlignLeft, AlignRight } from 'lucide-react';
 import { clsx } from 'clsx';
+import ImageUploader from '@/components/admin/common/ImageUploader';
 
 export default function FeatureSplitEditor({ data, onChange }) {
   const handleChange = (field, value) => {
@@ -60,22 +61,16 @@ export default function FeatureSplitEditor({ data, onChange }) {
                      </div>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Feature Image</label>
-                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
-                    <div className="space-y-1 text-center">
-                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                        <div className="flex text-sm text-gray-600">
-                        <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
-                            <span>Upload a file</span>
-                            <input type="file" className="sr-only" />
-                        </label>
-                        </div>
-                    </div>
-                    </div>
-                </div>
+                <ImageUploader
+                  label="Feature Image"
+                  value={data.image || ''}
+                  onChange={(url) => handleChange('image', url)}
+                  aspectRatio="4/3"
+                  maxSizeMB={10}
+                />
            </div>
        </div>
     </div>
   );
 }
+

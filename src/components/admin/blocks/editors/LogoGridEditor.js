@@ -1,5 +1,6 @@
 import React from 'react';
-import { Plus, Trash2, Upload } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
+import ImageUploader from '@/components/admin/common/ImageUploader';
 
 export default function LogoGridEditor({ data, onChange }) {
   const handleChange = (field, value) => {
@@ -8,7 +9,7 @@ export default function LogoGridEditor({ data, onChange }) {
 
   const handleAddLogo = () => {
     const currentLogos = data.logos || [];
-    handleChange('logos', [...currentLogos, { id: Date.now(), name: '', imageUrl: '' }]);
+    handleChange('logos', [...currentLogos, { id: Date.now(), name: '', imageUrl: '', image: '' }]);
   };
 
   const handleUpdateLogo = (index, field, value) => {
@@ -49,31 +50,42 @@ export default function LogoGridEditor({ data, onChange }) {
                 </button>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {(data.logos || []).map((logo, index) => (
-                    <div key={logo.id || index} className="relative p-3 bg-gray-50 rounded-lg border border-gray-200 group">
+                    <div key={logo.id || index} className="relative p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <button 
                             onClick={() => handleDeleteLogo(index)}
-                            className="absolute top-1 right-1 text-gray-400 hover:text-red-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute top-2 right-2 z-10 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg"
+                            title="Remove logo"
                         >
                             <Trash2 size={14} />
                         </button>
                         
-                        <div className="aspect-square bg-gray-200 rounded mb-2 flex items-center justify-center cursor-pointer hover:bg-gray-300 transition-colors">
-                             {logo.imageUrl ? (
-                                 <img src={logo.imageUrl} alt={logo.name} className="w-full h-full object-contain" />
-                             ) : (
-                                 <Upload size={20} className="text-gray-400" />
-                             )}
-                        </div>
+                        <div className="space-y-3">
+                            <input 
+                                type="text" 
+                                value={logo.name} 
+                                onChange={(e) => handleUpdateLogo(index, 'name', e.target.value)}
+                                className="block w-full border-gray-300 rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 text-sm px-3 py-2 border" 
+                                placeholder="Client Name"
+                            />
 
-                        <input 
-                            type="text" 
-                            value={logo.name} 
-                            onChange={(e) => handleUpdateLogo(index, 'name', e.target.value)}
-                            className="block w-full border-none bg-transparent text-center text-xs font-medium focus:ring-0 p-0 placeholder-gray-400 text-black" 
-                            placeholder="Client Name"
-                        />
+                            <ImageUploader
+                              value={logo.imageUrl || ''}
+                              onChange={(url) => {
+                                const newLogos = [...(data.logos || [])];
+                                newLogos[index] = {
+                                  ...newLogos[index],
+                                  imageUrl: url,
+                                  image: url,
+                                };
+                                handleChange('logos', newLogos);
+                              }}
+                              aspectRatio="1/1"
+                              maxSizeMB={2}
+                              allowedFormats={['image/png', 'image/svg+xml', 'image/webp']}
+                            />
+                        </div>
                     </div>
                 ))}
             </div>

@@ -1,6 +1,6 @@
 
 export default function FeatureSplitBlock({ data }) {
-  const isImageRight = data.imagePosition === "right";
+  const isImageRight = data?.imagePosition !== "left";
 
   return (
     <section className="py-20 bg-[#0f172a]"> {/* bg-darker class */}
@@ -12,28 +12,28 @@ export default function FeatureSplitBlock({ data }) {
         >
           {/* Text Content */}
           <div className="flex-1 text-left">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[] leading-tight">
-              {data.heading}
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white leading-tight">
+              {data?.heading}
             </h2>
             <p className="text-[#94a3b8] text-lg md:text-xl leading-[1.8]">
-              {data.description}
+              {data?.description}
             </p>
           </div>
 
           {/* Image / Icon Content */}
           <div className="flex-1 flex justify-center items-center">
             {/* If data.image is an icon class, we use the <i> tag, otherwise <img> */}
-            {data.isIcon ? (
+            {data?.isIcon ? (
               <div className="animate-[float_6s_ease-in-out_infinite]">
-                 <i className={`${data.image} text-[10rem] text-[#60a5fa] opacity-80`}></i>
+                 <i className={`${data?.image} text-[10rem] text-[#60a5fa] opacity-80`}></i>
               </div>
             ) : (
               <div className="relative group">
                 {/* Glow effect behind the image */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#60a5fa] to-[#ce80dd] rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
                 <img
-                  src={data.image}
-                  alt={data.heading}
+                  src={data?.image || 'https://placehold.co/600x400'}
+                  alt={data?.heading || 'Feature Image'}
                   className="relative rounded-xl shadow-2xl w-full max-w-lg object-cover animate-[float_6s_ease-in-out_infinite]"
                 />
               </div>
@@ -57,4 +57,3 @@ export default function FeatureSplitBlock({ data }) {
     </section>
   );
 }
-
