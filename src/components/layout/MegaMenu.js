@@ -33,25 +33,36 @@ export default function MegaMenu({ menu }) {
     <div className="flex gap-8" ref={menuRef}>
       {menu.map((category) => {
         const isOpen = openCategoryId === category._id;
+        const hasChildren = category.children && category.children.length > 0;
+        const categoryHref = category.slug ? `/${category.slug}` : "#";
 
         return (
           <div key={category._id} className="relative">
             {/* TOP NAV ITEM */}
-            <span
-              className={`nav-link cursor-pointer ${
-                isOpen ? "text-[#CE80DD]" : ""
-              }`}
-              onClick={() =>
-                setOpenCategoryId(isOpen ? null : category._id)
-              }
-            >
-              {category.title.toUpperCase()}
-            </span>
+            {hasChildren ? (
+              <span
+                className={`nav-link cursor-pointer ${
+                  isOpen ? "text-[#CE80DD]" : ""
+                }`}
+                onClick={() =>
+                  setOpenCategoryId(isOpen ? null : category._id)
+                }
+              >
+                {category.title.toUpperCase()}
+              </span>
+            ) : (
+              <Link
+                href={categoryHref}
+                className="nav-link"
+                onClick={() => setOpenCategoryId(null)}
+              >
+                {category.title.toUpperCase()}
+              </Link>
+            )}
 
             {/* MEGA MENU */}
             {isOpen &&
-              category.children &&
-              category.children.length > 0 && (
+              hasChildren && (
                 <div className="absolute left-0 top-full mt-4 z-50">
                   <div className="flex rounded-md overflow-hidden bg-[#1B1E27] border border-white/5 shadow-2xl">
 
@@ -123,4 +134,4 @@ export default function MegaMenu({ menu }) {
       })}
     </div>
   );
-}   
+}

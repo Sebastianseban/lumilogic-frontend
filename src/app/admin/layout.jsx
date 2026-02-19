@@ -44,12 +44,10 @@ export default function AdminLayout({ children }) {
   }
 
   const navItems = [
-    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+
     { name: 'Pages', href: '/admin/pages', icon: FileText },
     { name: 'Categories', href: '/admin/categories', icon: Menu },
-    { name: 'Media Library', href: '/admin/media', icon: ImageIcon },
-    { name: 'SEO Manager', href: '/admin/seo', icon: Search },
-    { name: 'Settings', href: '/admin/settings', icon: Settings },
+ 
   ];
 
   return (

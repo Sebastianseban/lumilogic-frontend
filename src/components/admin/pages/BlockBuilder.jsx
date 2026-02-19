@@ -12,6 +12,11 @@ import ServicesGridEditor from '@/components/admin/blocks/editors/ServicesGridEd
 import ProcessGridEditor from '@/components/admin/blocks/editors/ProcessGridEditor';
 import LogoGridEditor from '@/components/admin/blocks/editors/LogoGridEditor';
 import BenefitsGridEditor from '@/components/admin/blocks/editors/BenefitsGridEditor';
+import {
+  getDefaultBlockData,
+  normalizeBlockData,
+  normalizeBlockType,
+} from '@/lib/blockData';
 
 export default function BlockBuilder({ blocks = [], onChange }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,10 +50,11 @@ export default function BlockBuilder({ blocks = [], onChange }) {
   };
 
     const handleAddBlock = (type) => {
+    const normalizedType = normalizeBlockType(type);
     const newBlock = {
         id: Date.now().toString(), // Simple ID
-        type,
-        data: {}, // Initial data
+        type: normalizedType,
+        data: getDefaultBlockData(normalizedType),
         hidden: false
     };
     onChange([...blocks, newBlock]);
@@ -74,7 +80,9 @@ export default function BlockBuilder({ blocks = [], onChange }) {
     <div className="space-y-6 pb-20">
       <div className="space-y-4">
         {blocks.map((block, index) => {
-            const EditorComponent = EDITOR_MAP[block.type] || (() => <DefaultEditor type={block.type} />);
+            const blockType = normalizeBlockType(block?.type);
+            const normalizedData = normalizeBlockData(blockType, block?.data);
+            const EditorComponent = EDITOR_MAP[blockType] || (() => <DefaultEditor type={blockType} />);
             
             return (
                 <BlockWrapper
@@ -88,8 +96,8 @@ export default function BlockBuilder({ blocks = [], onChange }) {
                     onUpdate={(updatedBlock) => handleUpdateBlock(index, updatedBlock)}
                 >
                     <EditorComponent 
-                        data={block.data} 
-                        onChange={(newData) => handleUpdateBlockData(index, newData)} 
+                        data={normalizedData} 
+                        onChange={(newData) => handleUpdateBlockData(index, normalizeBlockData(blockType, newData))} 
                     />
                 </BlockWrapper>
             );

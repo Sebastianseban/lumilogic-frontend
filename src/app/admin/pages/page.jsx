@@ -1,137 +1,155 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Plus, Edit, Eye, Trash2 } from 'lucide-react';
+import { Plus, Edit, Eye, Trash2, Loader2 } from 'lucide-react';
 import { usePagesStore } from '@/store/usePagesStore';
 
 export default function PagesPage() {
-  const { pages, fetchPages, deletePage, isLoading, error } =
-    usePagesStore();
+  const { pages, fetchPages, deletePage, isLoading, error } = usePagesStore();
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     fetchPages();
   }, [fetchPages]);
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      'Are you sure you want to delete this page?'
-    );
+    const confirmDelete = window.confirm('Are you sure you want to delete this page?');
     if (!confirmDelete) return;
 
-    await deletePage(id);
+    setDeletingId(id);
+    try {
+      await deletePage(id);
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-8">
         <div>
-          <h1 className="text-2xl text-black font-bold text-[var(--text-primary)]">
-            Pages
-          </h1>
-          <p className="text-sm text-[var(--text-muted)]">
-            Manage website pages
-          </p>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Pages</h1>
+          <p className="text-slate-600">Manage your website pages</p>
         </div>
-
         <Link
           href="/admin/pages/new"
-          className="flex items-center gap-2 px-4 py-2 rounded-lg
-          bg-[var(--accent)] text-[#0B1023] hover:opacity-90 transition"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/50 shadow-lg hover:shadow-xl transition-all duration-200"
         >
-          <Plus size={16} />
+          <Plus size={20} />
           New Page
         </Link>
       </div>
 
-      {/* Table Container */}
-      <div className="bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)] overflow-hidden">
+      {/* Content */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         {isLoading ? (
-          <p className="p-6 text-[var(--text-muted)]">Loading pages…</p>
+          <div className="p-12 text-center">
+            <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
+            <p className="text-lg text-slate-600">Loading pages...</p>
+          </div>
         ) : error ? (
-          <p className="p-6 text-red-400">{error}</p>
+          <div className="p-12 text-center">
+            <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-10 h-10 text-red-500" />
+            </div>
+            <p className="text-xl text-slate-900 mb-2">{error}</p>
+            <button
+              onClick={() => fetchPages()}
+              className="px-6 py-2 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
         ) : pages.length === 0 ? (
-          <div className="p-10 text-center text-[var(--text-muted)]">
-            <p>No pages created yet.</p>
+          <div className="p-16 text-center">
+            <div className="w-24 h-24 bg-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <Plus className="w-12 h-12 text-slate-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">No pages yet</h3>
+            <p className="text-slate-600 mb-8 max-w-md mx-auto">
+              Get started by creating your first page.
+            </p>
             <Link
               href="/admin/pages/new"
-              className="inline-block mt-4 text-blue-500 underline"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/50 shadow-lg hover:shadow-xl transition-all"
             >
-              Create your first page
+              <Plus size={20} />
+              Create First Page
             </Link>
           </div>
         ) : (
-          <table className="w-full text-sm">
-            <thead className="border-b border-[var(--border-subtle)]">
-              <tr className="text-left text-[var(--text-muted)]">
-                <th className="p-4">Title</th>
-                <th>Slug</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th className="p-4 text-right">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {pages.map((page) => (
-                <tr
-                  key={page._id}
-                  className="border-b border-[var(--border-subtle)] hover:bg-[#1A2148] transition"
-                >
-                  <td className="p-4 font-medium">
-                    {page.title}
-                  </td>
-
-                  <td>/{page.slug}</td>
-
-                  <td className="capitalize">
-                    {page.type}
-                  </td>
-
-                  <td>
-                    {page.isPublished ? (
-                      <span className="text-green-400 font-medium">
-                        Published
-                      </span>
-                    ) : (
-                      <span className="text-yellow-400 font-medium">
-                        Draft
-                      </span>
-                    )}
-                  </td>
-
-                  <td className="p-4 flex justify-end gap-3">
-                    <Link href={`/admin/pages/${page._id}`}>
-                      <Edit
-                        size={18}
-                        className="cursor-pointer hover:text-blue-400"
-                      />
-                    </Link>
-
-                    <a
-                      href={`/${page.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Eye
-                        size={18}
-                        className="cursor-pointer hover:text-green-400"
-                      />
-                    </a>
-
-                    <button onClick={() => handleDelete(page._id)}>
-                      <Trash2
-                        size={18}
-                        className="text-red-400 cursor-pointer hover:text-red-500"
-                      />
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="px-6 py-5 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Title</th>
+                  <th className="px-6 py-5 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Slug</th>
+                  <th className="px-6 py-5 text-left text-xs font-bold text-slate-700 uppercase tracking-wider hidden md:table-cell">Type</th>
+                  <th className="px-6 py-5 text-left text-xs font-bold text-slate-700 uppercase tracking-wider hidden lg:table-cell">Status</th>
+                  <th className="px-6 py-5 text-right text-xs font-bold text-slate-700 uppercase tracking-wider">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {pages.map((page) => (
+                  <tr key={page._id} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-6 py-5 font-medium text-slate-900 max-w-md truncate">
+                      {page.title}
+                    </td>
+                    <td className="px-6 py-5 text-sm text-slate-600">
+                      /{page.slug}
+                    </td>
+                    <td className="px-6 py-5 text-sm text-slate-600 capitalize hidden md:table-cell">
+                      {page.type}
+                    </td>
+                    <td className="px-6 py-5 hidden lg:table-cell">
+                      <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
+                        page.isPublished 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {page.isPublished ? 'Published' : 'Draft'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-5 text-right">
+                      <div className="flex items-center gap-2 justify-end">
+                        <Link
+                          href={`/admin/pages/${page._id}`}
+                          className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          title="Edit"
+                        >
+                          <Edit size={18} />
+                        </Link>
+                        <a
+                          href={`/${page.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 text-slate-500 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+                          title="View Live"
+                        >
+                          <Eye size={18} />
+                        </a>
+                        <button
+                          onClick={() => handleDelete(page._id)}
+                          disabled={deletingId === page._id}
+                          className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+                          title="Delete"
+                        >
+                          {deletingId === page._id ? (
+                            <Loader2 size={18} className="animate-spin" />
+                          ) : (
+                            <Trash2 size={18} />
+                          )}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

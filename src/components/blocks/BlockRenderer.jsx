@@ -4,31 +4,30 @@ import ProcessGridBlock from "./ProcessGridBlock";
 import ServicesGridBlock from "./ServicesGridBlock";
 import LogoGridBlock from "./LogoGridBlock";
 import BenefitsGridBlock from "./BenefitsGridBlock";
+import { normalizeBlockData, normalizeBlockType } from "@/lib/blockData";
 
 export default function BlockRenderer({ block }) {
-  switch (block.type) {
+  const type = normalizeBlockType(block?.type);
+  const data = normalizeBlockData(type, block?.data);
+
+  switch (type) {
     case "hero":
-      return <HeroBlock data={block.data} />;
+      return <HeroBlock data={data} />;
 
     case "feature_split":
-    case "feature-split":
-      return <FeatureSplitBlock data={block.data} />;
+      return <FeatureSplitBlock data={data} />;
 
     case "process_grid":
-    case "process-grid":
-      return <ProcessGridBlock data={block.data} />;
+      return <ProcessGridBlock data={data} />;
 
     case "services_grid":
-    case "services-grid":
-      return <ServicesGridBlock data={block.data} />;
+      return <ServicesGridBlock data={data} />;
 
     case "logo_grid":
-    case "logo-grid":
-      return <LogoGridBlock data={block.data} />;
+      return <LogoGridBlock data={data} />;
 
     case "benefits_grid":
-    case "benefits-grid":
-      return <BenefitsGridBlock data={block.data} />;
+      return <BenefitsGridBlock data={data} />;
 
     default:
       return null;
