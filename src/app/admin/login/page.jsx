@@ -116,11 +116,12 @@
 // }
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import api from '@/lib/api';
+import { getAdminToken, setAdminToken } from '@/lib/adminAuth';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -128,6 +129,17 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextPath = searchParams.get('next');
+  const redirectPath =
+    nextPath && nextPath.startsWith('/admin') && nextPath !== '/admin/login'
+      ? nextPath
+      : '/admin/pages';
+
+  useEffect(() => {
+    const token = getAdminToken();
+    if (token) router.replace(redirectPath);
+  }, [redirectPath, router]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -143,9 +155,8 @@ export default function LoginPage() {
         return;
       }
 
-      localStorage.setItem('accessToken', token);
-      localStorage.setItem('admin_token', token);
-      router.push('/admin/categories');
+      setAdminToken(token);
+      router.push(redirectPath);
     } catch (err) {
       setError(err?.response?.data?.message || 'Invalid email or password');
     } finally {

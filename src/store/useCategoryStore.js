@@ -6,6 +6,9 @@ import {
   buildCategoryPayload,
 } from '@/features/categories/category.mapper';
 
+const getApiErrorMessage = (error, fallback) =>
+  error?.response?.data?.message || error?.response?.data?.error || fallback;
+
 export const useCategoryStore = create((set, get) => ({
   categories: [],
   selectedId: null,
@@ -33,11 +36,13 @@ export const useCategoryStore = create((set, get) => ({
   /* ---------------- CREATE ---------------- */
   createCategory: async (formData) => {
     try {
-      set({ isSaving: true });
+      set({ isSaving: true, error: '' });
       const payload = buildCategoryPayload(formData);
       const res = await api.post('/admin/categories', payload);
       set({ selectedId: res?.data?.data?._id || null });
       await get().fetchCategories();
+    } catch (error) {
+      set({ error: getApiErrorMessage(error, 'Failed to create category') });
     } finally {
       set({ isSaving: false });
     }
@@ -46,10 +51,12 @@ export const useCategoryStore = create((set, get) => ({
   /* ---------------- UPDATE ---------------- */
   updateCategory: async (id, formData) => {
     try {
-      set({ isSaving: true });
+      set({ isSaving: true, error: '' });
       const payload = buildCategoryPayload(formData);
       await api.put(`/admin/categories/${id}`, payload);
       await get().fetchCategories();
+    } catch (error) {
+      set({ error: getApiErrorMessage(error, 'Failed to update category') });
     } finally {
       set({ isSaving: false });
     }
@@ -58,10 +65,12 @@ export const useCategoryStore = create((set, get) => ({
   /* ---------------- DELETE ---------------- */
   deleteCategory: async (id) => {
     try {
-      set({ isSaving: true });
+      set({ isSaving: true, error: '' });
       await api.delete(`/admin/categories/${id}`);
       set({ selectedId: null });
       await get().fetchCategories();
+    } catch (error) {
+      set({ error: getApiErrorMessage(error, 'Failed to delete category') });
     } finally {
       set({ isSaving: false });
     }

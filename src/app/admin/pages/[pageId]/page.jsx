@@ -173,7 +173,7 @@ export default function EditPage() {
           </Link>
 
           <div>
-            <h1 className="text-2xl font-bold">Edit Page</h1>
+            <h1 className="text-2xl text-black font-bold">Edit Page</h1>
             <p className="text-sm text-[var(--text-muted)] mt-1">
               {meta.title || 'Untitled Page'}
             </p>

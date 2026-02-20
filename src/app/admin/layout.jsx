@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { clearAdminToken, getAdminToken } from '@/lib/adminAuth';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -20,8 +21,7 @@ export default function AdminLayout({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Basic protection
-    const token = localStorage.getItem('admin_token');
+    const token = getAdminToken();
     if (!token && pathname !== '/admin/login') {
       router.push('/admin/login');
     } else {
@@ -31,7 +31,7 @@ export default function AdminLayout({ children }) {
 
   // Handle logout
   const handleLogout = () => {
-    localStorage.removeItem('admin_token');
+    clearAdminToken();
     router.push('/admin/login');
   };
 
