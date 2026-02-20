@@ -10,6 +10,7 @@ import {
   Image as ImageIcon, 
   Settings, 
   Search,
+  MessageSquare,
   LogOut
 } from 'lucide-react';
 
@@ -47,6 +48,7 @@ export default function AdminLayout({ children }) {
 
     { name: 'Pages', href: '/admin/pages', icon: FileText },
     { name: 'Categories', href: '/admin/categories', icon: Menu },
+    { name: 'Enquiries', href: '/admin/enquiries', icon: MessageSquare },
  
   ];
 
