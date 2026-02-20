@@ -1,16 +1,6 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import RouteLoader from "@/components/common/RouteLoader";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { Suspense } from "react";
 
 export const metadata = {
   title: "LumiLogic - Cloud Solutions & IT Services",
@@ -20,11 +10,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        suppressHydrationWarning
-      >
-        <RouteLoader />
+      <body className="antialiased" suppressHydrationWarning>
+        <Suspense fallback={null}>
+          <RouteLoader />
+        </Suspense>
         {children}
       </body>
     </html>
