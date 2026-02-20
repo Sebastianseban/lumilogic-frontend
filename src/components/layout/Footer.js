@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { 
@@ -12,20 +13,106 @@ import {
   Mail, 
   ChevronRight 
 } from "lucide-react";
+import api from "@/lib/api";
+
+const toHref = (slug) => {
+  if (!slug) return "#";
+  return `/${String(slug).replace(/^\/+/, "")}`;
+};
+
+const uniqueLinks = (links) => {
+  const seen = new Set();
+  return links.filter((item) => {
+    const key = item.href || item.label;
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
+const extractLeafLinks = (items = []) => {
+  const result = [];
+
+  const walk = (nodes) => {
+    for (const node of nodes || []) {
+      const children = Array.isArray(node?.children) ? node.children : [];
+      if (children.length > 0) {
+        walk(children);
+      } else if (node?.title && node?.slug) {
+        result.push({ label: node.title, href: toHref(node.slug) });
+      }
+    }
+  };
+
+  walk(items);
+  return result;
+};
 
 export default function Footer() {
-  const usefulLinks = [
-    "Home", "Cloud Migration Service", "Application Migration Service",
-    "Database Migration Service", "Application Modernization",
-    "Database Modernization Service", "Database Migration & Modernization",
-    "Generative AI Solutions", "Advance Analytics",
-    "Accelerate Data Preparation for ML", "AWS for Financial Service"
-  ];
+  const [menu, setMenu] = useState([]);
 
-  const services = [
-    "Business Applications", "Data & AI", "Application Services",
-    "Cloud Services", "About Us", "Enquiry"
-  ];
+  useEffect(() => {
+    let cancelled = false;
+
+    api
+      .get("/menu")
+      .then((res) => {
+        if (!cancelled) {
+          setMenu(res?.data?.data || []);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setMenu([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const usefulLinks = useMemo(() => {
+    const links = uniqueLinks([
+      { label: "Home", href: "/" },
+      ...(menu || []).map((item) => ({
+        label: item?.title || "",
+        href: toHref(item?.slug),
+      })),
+      { label: "About Us", href: "/about" },
+      { label: "Enquiry", href: "/enquiry" },
+    ]).filter((item) => item.label && item.href !== "#");
+
+    return links.length > 0
+      ? links
+      : [
+          { label: "Home", href: "/" },
+          { label: "About Us", href: "/about" },
+          { label: "Enquiry", href: "/enquiry" },
+        ];
+  }, [menu]);
+
+  const serviceLinks = useMemo(() => {
+    const servicesNode =
+      (menu || []).find((item) => {
+        const title = (item?.title || "").toLowerCase();
+        const slug = (item?.slug || "").toLowerCase();
+        return title === "services" || slug === "services";
+      }) || null;
+
+    const source = servicesNode
+      ? servicesNode.children?.length
+        ? servicesNode.children
+        : [servicesNode]
+      : menu;
+
+    const links = uniqueLinks(extractLeafLinks(source)).slice(0, 12);
+
+    return links.length > 0
+      ? links
+      : [
+          { label: "About Us", href: "/about" },
+          { label: "Enquiry", href: "/enquiry" },
+        ];
+  }, [menu]);
 
   return (
     <footer className="w-full bg-[#020617] pt-24 pb-12 px-6 text-white border-t border-white/10">
@@ -69,11 +156,11 @@ export default function Footer() {
           <div className="flex flex-col gap-6">
             <h4 className="text-[#CE80DD] font-bold text-[18px] uppercase tracking-wider">Useful Links</h4>
             <ul className="flex flex-col gap-4">
-              {usefulLinks.map((link, i) => (
-                <li key={i}>
-                  <Link href="#" className="group flex items-center gap-2 text-[#F2F3FB] text-[15px] hover:text-[#CE80DD] transition-colors">
+              {usefulLinks.map((link) => (
+                <li key={`${link.label}-${link.href}`}>
+                  <Link href={link.href} className="group flex items-center gap-2 text-[#F2F3FB] text-[15px] hover:text-[#CE80DD] transition-colors">
                     <ChevronRight size={18} className="text-[#CE80DD] group-hover:translate-x-1 transition-transform" />
-                    {link}
+                    {link.label}
                   </Link>
                 </li>
               ))}
@@ -84,11 +171,11 @@ export default function Footer() {
           <div className="flex flex-col gap-6">
             <h4 className="text-[#CE80DD] font-bold text-[18px] uppercase tracking-wider">Services</h4>
             <ul className="flex flex-col gap-4">
-              {services.map((service, i) => (
-                <li key={i}>
-                  <Link href="#" className="group flex items-center gap-2 text-[#F2F3FB] text-[15px] hover:text-[#CE80DD] transition-colors">
+              {serviceLinks.map((service) => (
+                <li key={`${service.label}-${service.href}`}>
+                  <Link href={service.href} className="group flex items-center gap-2 text-[#F2F3FB] text-[15px] hover:text-[#CE80DD] transition-colors">
                     <ChevronRight size={18} className="text-[#CE80DD] group-hover:translate-x-1 transition-transform" />
-                    {service}
+                    {service.label}
                   </Link>
                 </li>
               ))}
